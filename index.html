@@ -112,20 +112,27 @@ wavesurfer.load('https://ia902606.us.archive.org/35/items/shortpoetry_047_libriv
 function AddCuePoint()
 {	
 	var CueName = $("#txt_CueName").val();
-  $("#txt_CueName").prop("value", "");
+  
+  if(!CueName)
+  {
+  	alert("Give me a name first please")
+  }
+  else
+  {
+    $("#txt_CueName").prop("value", "");
 
-	cueCount ++;
-  cues.push(wavesurfer.getCurrentTime());
-	var btn = document.createElement("BUTTON");  
-	btn.innerHTML = CueName; 
-  btn.id = cueCount;
-  
-	document.getElementById("CueButtons").appendChild(btn);               
-  $("#" + btn.id).addClass("btn btn-success");
-  $("#" + btn.id).draggable({cancel:false});
-  
-	btn.addEventListener("click", function(){TriggerCuePoint(btn.id)});
-  
+    cueCount ++;
+    cues.push(wavesurfer.getCurrentTime());
+    var btn = document.createElement("BUTTON");  
+    btn.innerHTML = CueName; 
+    btn.id = cueCount;
+
+    document.getElementById("CueButtons").appendChild(btn);               
+    $("#" + btn.id).addClass("btn btn-success");
+    $("#" + btn.id).draggable({cancel:false});
+
+    btn.addEventListener("click", function(){TriggerCuePoint(btn.id)});
+  }
 }
 
 
