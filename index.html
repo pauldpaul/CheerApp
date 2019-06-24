@@ -1,0 +1,123 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Infinity One Five Cheer App</title>
+  <meta name="description" content="A web based app to help with cheer training Sessions">
+  <meta name="author" content="Paul Dale">
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+</head>
+
+<body>
+
+<div class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+  </div>
+  <div class="custom-file">
+    <input type="file" class="custom-file-input" id="inputGroupFile01"
+      aria-describedby="inputGroupFileAddon01" onchange="handleFiles(this.files)">
+    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+  </div>
+</div>
+
+<div id="waveform"></div>
+<!--
+<audio controls id="track">
+  <source src="https://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+-->
+<br />
+
+<input id="PlayPause" type="button" Value="Play" onclick="playPause()" class="btn btn-primary" > 
+<br  />
+<br />
+<input type="text" id="txt_CueName" placeholder="Cue Name" class="form-control">
+<input id="AddCue" type="button" Value="Add Cue" onclick="AddCuePoint()" class="btn btn-primary" > 
+
+</body>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/wavesurfer@1.3.4/dist/wavesurfer.min.js"></script>
+
+<script>
+var track = document.getElementById("track");
+
+var cues = [];
+
+var cueCount = 0;
+
+var wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: 'violet',
+    progressColor: 'purple'
+});
+
+/*
+$( "#AddCue" ).bind( "click", function() {
+  alert( "User clicked on 'foo.'" );
+});
+*/
+
+function handleFiles(files)
+{
+wavesurfer.loadBlob(files[0]);
+}
+
+
+
+wavesurfer.load('https://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3');
+
+function AddCuePoint()
+{	
+	var CueName = $("#txt_CueName").val();
+  $("#txt_CueName").prop("value", "");
+
+	cueCount ++;
+  cues.push(wavesurfer.getCurrentTime());
+	var btn = document.createElement("BUTTON");  
+	btn.innerHTML = CueName; 
+  btn.id = cueCount;
+  
+	document.body.appendChild(btn);               
+  $("#" + btn.id).addClass("btn btn-success");
+	btn.addEventListener("click", function(){TriggerCuePoint(btn.id)});
+}
+
+
+function TriggerCuePoint(Cue)
+{
+	//alert(cues);
+  //alert(cues[Cue]);
+	//track.currentTime = cues[Cue-1];
+  
+  wavesurfer.play(cues[Cue-1]);
+
+}
+
+function playPause()
+{
+  var state = wavesurfer.isPlaying();
+  
+  if(state === true)
+  {
+  	$("#PlayPause").prop('value', 'Play');
+  }
+  else
+  {
+  	$("#PlayPause").prop('value', 'Pause');
+  }
+
+  wavesurfer.playPause();
+}
+
+</script>
